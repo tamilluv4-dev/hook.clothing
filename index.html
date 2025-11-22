@@ -36,19 +36,30 @@
     /* Hero with polo-shirt background + overlay */
     .hero-wrap {
       position: relative;
-      height: 55vh;
+      min-height: 80vh;
+      width: 100%;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       overflow: hidden;
     }
 
     .hero {
       position: absolute;
       inset: 0;
-      background: url('/photos/polo.jpg') center/cover no-repeat;
-      transform: scale(1.02);
+      width: 100%;
+      height: 100%;
+      background-image: url('/photos/polo.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       filter: saturate(0.95);
+    }
+
+    @media (max-width: 600px) {
+      .hero-wrap {
+        min-height: 60vh;
+      }
     }
 
     /* subtle dark overlay + blur for readability */
