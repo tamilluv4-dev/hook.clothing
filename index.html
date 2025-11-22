@@ -33,10 +33,10 @@
       letter-spacing: 3px;
     }
 
-    /* Hero with polo-shirt background + overlay */
+    /* Hero */
     .hero-wrap {
       position: relative;
-      height: 55vh;
+      min-height: 80vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -47,11 +47,9 @@
       position: absolute;
       inset: 0;
       background: url('/photos/polo.jpg') center/cover no-repeat;
-      transform: scale(1.02);
       filter: saturate(0.95);
     }
 
-    /* subtle dark overlay + blur for readability */
     .hero-overlay {
       position: absolute;
       inset: 0;
@@ -132,6 +130,7 @@
       font-size: 1rem;
     }
 
+    /* Desktop Cart (slide from right) */
     #cart {
       position: fixed;
       right: -420px;
@@ -144,6 +143,22 @@
       padding: 20px;
       overflow-y: auto;
       z-index: 40;
+    }
+
+    /* Mobile cart: Bottom drawer */
+    @media (max-width: 600px) {
+      #cart {
+        width: 100%;
+        height: 50vh;
+        right: 0;
+        top: auto;
+        bottom: -60vh;
+        border-left: none;
+        border-top: 3px solid #000;
+      }
+      #cart.open {
+        bottom: 0;
+      }
     }
 
     .cart-item { margin-bottom: 10px; }
@@ -182,9 +197,6 @@
       margin-top: 40px;
     }
 
-    @media (max-width: 600px) {
-      #cart { width: 100%; right: -100%; }
-    }
   </style>
 </head>
 <body>
@@ -194,8 +206,8 @@
 </header>
 
 <section class="hero-wrap">
-  <div class="hero" aria-hidden="true"></div>
-  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="hero"></div>
+  <div class="hero-overlay"></div>
   <div class="hero-content">
     <h2>Level Up Your Style</h2>
     <p style="opacity:.9; margin-top:8px;">Classic polos & modern tees — made for makers.</p>
@@ -205,6 +217,7 @@
 <h2 class="section-title">Shop Collection</h2>
 
 <section class="products">
+  <!-- Product 1 -->
   <div class="product-card">
     <img src="/photos/shirt1.jpg" alt="Mindset Matters Tee" />
     <h3>Mindset Matters Tee</h3>
@@ -217,6 +230,7 @@
     <button class="add-btn" onclick="addToCart('Mindset Matters Tee', 799, this)">Add to Cart</button>
   </div>
 
+  <!-- Product 2 -->
   <div class="product-card">
     <img src="/photos/shirt2.jpg" alt="Keep Learning Tee" />
     <h3>Keep Learning Tee</h3>
@@ -229,8 +243,9 @@
     <button class="add-btn" onclick="addToCart('Keep Learning Tee', 749, this)">Add to Cart</button>
   </div>
 
+  <!-- Product 3 -->
   <div class="product-card">
-    <img src="photos/shirt3.jpg" alt="Stay Curious Tee" />
+    <img src="/photos/shirt3.jpg" alt="Stay Curious Tee" />
     <h3>Stay Curious Tee</h3>
     <p><strong>₹799</strong></p>
     <select class="size">
@@ -248,14 +263,13 @@
   <h3 id="total"></h3>
   <button class="checkout-btn" onclick="checkout()">Checkout via WhatsApp</button>
 </div>
+
 <button id="cartBtn" onclick="toggleCart()">🛍 Cart</button>
 
 <footer>© 2025 Hook Clothing.</footer>
 
 <script>
-// Replace this with your number when ready (country code + number, no + or 00)
 const phone = "919597270160";
-
 let cart = [];
 
 function addToCart(name, price, element) {
@@ -272,8 +286,11 @@ function addToCart(name, price, element) {
 
   cart.push({ name, price, size, qty });
   updateCart();
-  // auto-open cart for mobile friendliness
-  openCart();
+
+  // Open cart only on desktop, not mobile
+  if (window.innerWidth > 600) {
+    openCart();
+  }
 }
 
 function updateCart() {
@@ -298,11 +315,12 @@ function removeItem(index) {
 }
 
 function toggleCart() {
-  const el = document.getElementById('cart');
-  if (el.style.right && el.style.right === '0px') {
-    el.style.right = '-420px';
+  const cartEl = document.getElementById('cart');
+
+  if (window.innerWidth <= 600) {
+    cartEl.classList.toggle('open'); // mobile drawer animation
   } else {
-    el.style.right = '0px';
+    cartEl.style.right = cartEl.style.right === '0px' ? '-420px' : '0px';
   }
 }
 
@@ -311,18 +329,18 @@ function openCart() {
 }
 
 function checkout() {
-  if (!cart.length) { alert('Cart is empty'); return; }
+  if (!cart.length) return alert('Cart is empty');
 
   let message = 'Order%20from%20Hook%20Clothing%5Cn%5Cn';
   let total = 0;
+
   cart.forEach(item => {
-    message += `${encodeURIComponent(item.name)}%20(${encodeURIComponent(item.size)})%20x%20${item.qty}%20-%20₹${item.price*item.qty}%5Cn`;
+    message += `${encodeURIComponent(item.name)}%20(${encodeURIComponent(item.size)})%20x%20${item.qty}%20-%20₹${item.price * item.qty}%5Cn`;
     total += item.price * item.qty;
   });
-  message += `%5CnTotal:%20₹${total}%5Cn%5CnName:%20%5CnAddress:%20%5CnPhone:%20`;
 
-  const url = `https://wa.me/${phone}?text=${message}`;
-  window.open(url, '_blank');
+  message += `%5CnTotal:%20₹${total}%5Cn%5CnName:%20%5CnAddress:%20%5CnPhone:%20`;
+  window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
 }
 </script>
 
