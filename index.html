@@ -36,30 +36,19 @@
     /* Hero with polo-shirt background + overlay */
     .hero-wrap {
       position: relative;
-      min-height: 80vh;
-      width: 100%;
+      height: 55vh;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
     .hero {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('/photos/polo.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background: url('/photos/polo.jpg') center/cover no-repeat;
+      transform: scale(1.02);
       filter: saturate(0.95);
-    }
-
-    @media (max-width: 600px) {
-      .hero-wrap {
-        min-height: 60vh;
-      }
     }
 
     /* subtle dark overlay + blur for readability */
@@ -241,7 +230,7 @@
   </div>
 
   <div class="product-card">
-    <img src="/photos/shirt3.jpg" alt="Stay Curious Tee" />
+    <img src="photos/shirt3.jpg" alt="Stay Curious Tee" />
     <h3>Stay Curious Tee</h3>
     <p><strong>₹799</strong></p>
     <select class="size">
